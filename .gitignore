@@ -1,0 +1,4 @@
+*.o
+compare
+test_wfd
+a.out
