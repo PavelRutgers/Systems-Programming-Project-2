@@ -1,0 +1,14 @@
+Names: Pavel Sverdlov, Nyssa Rawat
+NetIDs: ps1329, nr649
+
+Project Description:
+
+Testing Plan:
+  for the first phase of the project (wfd), we created a test file "test_wfd.c" which would take argument "text.txt" and return the list of words, count, and frequency.
+  The text file was edited to contain different test cases, to test how our program handled punctuation, hyphens, and the case of the letters. 
+  The file had the following contents at various stages of testing: 
+    - spam spam eggs bacon (testing basic functionality)
+    - spam SPAM SpaM Eggs (testing case sensitivity)
+    - sp.am spam'm spa'm eggs. (testing effect of punctuation)
+    - spam-spam SPAM eggs Eggs (testing hyphens, also case sensitivity).
+  At this stage of the project, we had compiled wfd separately using 
