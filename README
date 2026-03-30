@@ -3,6 +3,8 @@ NetIDs: ps1329, nr649
 
 Project Description:
 
+Our project contains a compare program, which analyzes a set of files and reports their similarity using the JSD for each pair of files in the set. It contains a file_set helper method, which stores the files in a dynamically resizing array of file_info structs.
+
 Testing Plan:
   for the first phase of the project (wfd), we created a test file "test_wfd.c" which would take argument "text.txt" and return the list of words, count, and frequency.
   The text file was edited to contain different test cases, to test how our program handled punctuation, hyphens, and the case of the letters. 
@@ -11,4 +13,9 @@ Testing Plan:
     - spam SPAM SpaM Eggs (testing case sensitivity)
     - sp.am spam'm spa'm eggs. (testing effect of punctuation)
     - spam-spam SPAM eggs Eggs (testing hyphens, also case sensitivity).
-  At this stage of the project, we had compiled wfd separately using 
+  At this stage of the project, we had compiled wfd separately using gcc. 
+
+  After implementing file_set, we created an additional file "test_fileset.c" which added multiple files to the fileset, printed out their paths, word counts, and word frequency distribution. 
+  We then tested this program by creating a second text file, and ensuring that each file was 1). correctly added to file_set, and 2). had its path stored correctly. 
+
+  To test jsd behavior, we created a file titled "test_jsd.c", comparing 2 files with known contents from the project write up ("hi hi out there" and "hi there hi there"). Testing provided us with the correct expected value for these 2 files. 
