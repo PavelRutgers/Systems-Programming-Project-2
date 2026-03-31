@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdint.h>
 #include "wfd.h"
 
 static char *copy_string(const char *s){
@@ -75,19 +76,21 @@ static int is_word_char(char c) {
 }
 
 word_entry *build_wfd_from_file(const char *path, size_t *total_words) {
+    *total_words = SIZE_MAX;
+
     int fd = open(path, O_RDONLY);
     if (fd < 0) {
         perror(path);
         return NULL;
     }
 
+    *total_words = 0;
+
     char buffer[4096];
     ssize_t bytes_read;
 
     word_entry *head = NULL;
-    *total_words = 0;
 
-    // dynamic word buffer
     char *word = NULL;
     size_t word_len = 0;
     size_t word_cap = 0;
@@ -97,7 +100,6 @@ word_entry *build_wfd_from_file(const char *path, size_t *total_words) {
             char c = buffer[i];
 
             if (is_word_char(c)) {
-                // grow word buffer if needed
                 if (word_len + 1 >= word_cap) {
                     word_cap = (word_cap == 0) ? 16 : word_cap * 2;
                     char *tmp = realloc(word, word_cap);
@@ -111,7 +113,6 @@ word_entry *build_wfd_from_file(const char *path, size_t *total_words) {
 
                 word[word_len++] = tolower((unsigned char)c);
             } else if (isspace((unsigned char)c)) {
-                // end of a word
                 if (word_len > 0) {
                     word[word_len] = '\0';
                     head = insert_or_increment(head, word);
@@ -119,15 +120,18 @@ word_entry *build_wfd_from_file(const char *path, size_t *total_words) {
                     word_len = 0;
                 }
             }
-            // ignore punctuation (do nothing)
         }
     }
 
     if (bytes_read < 0) {
         perror(path);
+        free(word);
+        free_wfd(head);
+        close(fd);
+        *total_words = SIZE_MAX;
+        return NULL;
     }
 
-    // handle last word if file doesn't end with whitespace
     if (word_len > 0) {
         word[word_len] = '\0';
         head = insert_or_increment(head, word);
@@ -137,7 +141,6 @@ word_entry *build_wfd_from_file(const char *path, size_t *total_words) {
     free(word);
     close(fd);
 
-    // compute frequencies
     if (*total_words > 0) {
         compute_frequencies(head, *total_words);
     }

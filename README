@@ -3,7 +3,13 @@ NetIDs: ps1329, nr649
 
 Project Description:
 
-Our project contains a compare program, which analyzes a set of files and reports their similarity using the JSD for each pair of files in the set. It contains a file_set helper method, which stores the files in a dynamically resizing array of file_info structs.
+Our project compares a set of files and reports their similarity using the JSD for each pair in the set. It contains a file_set helper method that stores the files in a dynamically resizing array of file_info structs.
+
+Design Notes:
+  Word frequency distributions are stored as lexicographically ordered linked lists of word/count/frequency entries. This keeps token insertion simple while also making simultaneous traversal for JSD computation straightforward.
+  Directory traversal is recursive. Explicit file arguments are always analyzed, while files discovered during traversal are included only if they end in ".txt". Hidden entries whose names begin with a period are skipped.
+  File contents are read using the required Posix open(), read(), and close() calls. Words are normalized to lowercase while reading, punctuation is ignored, and word storage grows dynamically so the implementation does not assume a maximum word length. 
+  To differentiate valid empty files from read failures, we used total-word-count values to keep empty files with zero words and exclude unreadable files from analysis.
 
 Testing Plan:
   for the first phase of the project (wfd), we created a test file "test_wfd.c" which would take argument "text.txt" and return the list of words, count, and frequency.

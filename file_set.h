@@ -17,7 +17,7 @@ typedef struct {
 } file_set;
 
 void file_set_init(file_set *set);
-void file_set_add(file_set *set, const char *path);
+int file_set_add(file_set *set, const char *path);
 void file_set_free(file_set *set);
 
 #endif

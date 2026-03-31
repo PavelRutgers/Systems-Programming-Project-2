@@ -30,7 +30,6 @@ int main(int argc, char *argv[]) {
 
     size_t count = 0;
     comparison *arr = build_comparisons(&set, &count);
-
     qsort(arr, count, sizeof(comparison), cmp_comparisons);
 
     for (size_t i = 0; i < count; i++) {
